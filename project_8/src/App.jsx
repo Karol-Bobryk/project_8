@@ -3,22 +3,27 @@ import reactLogo from "./assets/react.svg";
 import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [places, setPlaces] = useState([]);
   const getPlaces = () => {
-    const searchQuery = "cafes";
-    const proxyUrl = "https://cors-anywhere.herokuapp.com/";
-    const apiKey = "AIzaSyAhdjzesX4A_FSVow1BGPfym7aoisYlNdU";
-    const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${searchQuery}&key=${apiKey}`;
-    fetch(proxyUrl + url, {
-      headers: { "x-cors-api-key": "temp_7a2060f8fe0ad6be89681e995a37890f" },
-    })
+    const url = "http://localhost:5000/api";
+    fetch(url)
       .then((response) => response.json())
-      .then((data) => console.log(data))
+      .then((data) => setPlaces(data.results))
       .catch((error) => console.error(error));
   };
   return (
     <div className="App">
-      <button onClick={getPlaces}>AAAAAAAAAAA</button>
+      {places.map(
+        (place, key) =>
+          place && (
+            <div key={key}>
+              <img src={place.icon} />
+              <p>{place.name}</p>
+              <p>Address: {place.formatted_address}</p>
+            </div>
+          )
+      )}
+      <button onClick={getPlaces}>Download cafes</button>
     </div>
   );
 }
